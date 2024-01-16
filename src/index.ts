@@ -1,39 +1,46 @@
-import { Facet } from "@codemirror/state";
-import { EditorView, ViewPlugin, ViewUpdate } from "@codemirror/view";
-import { Overlay } from "./Overlay";
-import { Config, Options, Scale } from "./Config";
-import { DiagnosticState, diagnostics } from "./diagnostics";
-import { SelectionState, selections } from "./selections";
-import { TextState, text } from "./text";
-import { LinesState } from "./LinesState";
-import crelt from "crelt";
-import { GUTTER_WIDTH, drawLineGutter } from "./Gutters";
+import { Facet } from '@codemirror/state';
+import { EditorView, ViewPlugin, ViewUpdate } from '@codemirror/view';
+import { Overlay } from './Overlay';
+import { Config, Options, Scale } from './Config';
+import { DiagnosticState, diagnostics } from './diagnostics';
+import { SelectionState, selections } from './selections';
+import { TextState, text } from './text';
+import { LinesState } from './LinesState';
+import crelt from 'crelt';
+import { GUTTER_WIDTH, drawLineGutter } from './Gutters';
 
 const Theme = EditorView.theme({
-  "&": {
-    height: "100%",
-    overflowY: "auto",
+  '&': {
+    height: '100%',
+    overflowY: 'auto',
   },
-  "& .cm-minimap-gutter": {
+  '& .cm-minimap-gutter': {
     borderRight: 0,
     flexShrink: 0,
-    left: "unset",
-    position: "sticky",
+    left: 'unset',
+    position: 'sticky',
     right: 0,
     top: 0,
   },
-  "& .cm-minimap-inner": {
-    height: "100%",
-    position: "absolute",
+  '& .cm-minimap-autohide': {
+    opacity: 0.0,
+    transition: 'opacity 0.3s',
+  },
+  '& .cm-minimap-autohide:hover': {
+    opacity: 1.0,
+  },
+  '& .cm-minimap-inner': {
+    height: '100%',
+    position: 'absolute',
     right: 0,
     top: 0,
-    overflowY: "hidden",
-    "& canvas": {
-      display: "block",
+    overflowY: 'hidden',
+    '& canvas': {
+      display: 'block',
     },
   },
-  "& .cm-minimap-box-shadow": {
-    boxShadow: "12px 0px 20px 5px #6c6c6c",
+  '& .cm-minimap-box-shadow': {
+    boxShadow: '12px 0px 20px 5px #6c6c6c',
   },
 });
 
@@ -62,15 +69,15 @@ const minimapClass = ViewPlugin.fromClass(
     private create(view: EditorView) {
       const config = view.state.facet(showMinimap);
       if (!config) {
-        throw Error("Expected nonnull");
+        throw Error('Expected nonnull');
       }
 
-      this.inner = crelt("div", { class: "cm-minimap-inner" });
-      this.canvas = crelt("canvas") as HTMLCanvasElement;
+      this.inner = crelt('div', { class: 'cm-minimap-inner' });
+      this.canvas = crelt('canvas') as HTMLCanvasElement;
 
       this.dom = config.create(view).dom;
-      this.dom.classList.add("cm-gutters");
-      this.dom.classList.add("cm-minimap-gutter");
+      this.dom.classList.add('cm-gutters');
+      this.dom.classList.add('cm-minimap-gutter');
 
       this.inner.appendChild(this.canvas);
       this.dom.appendChild(this.inner);
@@ -88,6 +95,9 @@ const minimapClass = ViewPlugin.fromClass(
         if (handler) {
           this.dom.addEventListener(key, (e) => handler(e, this.view));
         }
+      }
+      if (config.autohide) {
+        this.dom.classList.add('cm-minimap-autohide');
       }
     }
 
@@ -137,16 +147,16 @@ const minimapClass = ViewPlugin.fromClass(
 
       this.updateBoxShadow();
 
-      this.dom.style.width = this.getWidth() + "px";
-      this.canvas.style.maxWidth = this.getWidth() + "px";
+      this.dom.style.width = this.getWidth() + 'px';
+      this.canvas.style.maxWidth = this.getWidth() + 'px';
       this.canvas.width = this.getWidth() * Scale.PixelMultiplier;
 
       const domHeight = this.view.dom.getBoundingClientRect().height;
-      this.inner.style.minHeight = domHeight + "px";
+      this.inner.style.minHeight = domHeight + 'px';
       this.canvas.height = domHeight * Scale.PixelMultiplier;
-      this.canvas.style.height = domHeight + "px";
+      this.canvas.style.height = domHeight + 'px';
 
-      const context = this.canvas.getContext("2d");
+      const context = this.canvas.getContext('2d');
       if (!context) {
         return;
       }
@@ -239,9 +249,9 @@ const minimapClass = ViewPlugin.fromClass(
       const { clientWidth, scrollWidth, scrollLeft } = this.view.scrollDOM;
 
       if (clientWidth + scrollLeft < scrollWidth) {
-        this.canvas.classList.add("cm-minimap-box-shadow");
+        this.canvas.classList.add('cm-minimap-box-shadow');
       } else {
-        this.canvas.classList.remove("cm-minimap-box-shadow");
+        this.canvas.classList.remove('cm-minimap-box-shadow');
       }
     }
 
@@ -268,7 +278,7 @@ const minimapClass = ViewPlugin.fromClass(
   }
 );
 
-export interface MinimapConfig extends Omit<Options, "enabled"> {
+export interface MinimapConfig extends Omit<Options, 'enabled'> {
   /**
    * A function that creates the element that contains the minimap
    */

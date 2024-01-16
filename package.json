@@ -1,9 +1,12 @@
 {
-  "name": "@replit/codemirror-minimap",
-  "version": "0.5.2",
+  "name": "@oeyoews/codemirror-minimap",
+  "version": "0.5.3",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
   "author": {
-    "name": "Brady Madden",
-    "email": "brady@repl.it"
+    "name": "oeyoews"
   },
   "type": "module",
   "main": "./dist/index.cjs",
@@ -48,6 +51,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/replit/codemirror-minimap.git"
+    "url": "https://github.com/oeyoews/codemirror-minimap.git"
   }
 }

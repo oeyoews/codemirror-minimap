@@ -1,7 +1,7 @@
-import { Facet, combineConfig } from "@codemirror/state";
-import { DOMEventMap, EditorView } from "@codemirror/view";
-import { MinimapConfig } from ".";
-import { Gutter } from "./Gutters";
+import { Facet, combineConfig } from '@codemirror/state';
+import { DOMEventMap, EditorView } from '@codemirror/view';
+import { MinimapConfig } from '.';
+import { Gutter } from './Gutters';
 
 type EventHandler<event extends keyof DOMEventMap> = (
   e: DOMEventMap[event],
@@ -9,12 +9,17 @@ type EventHandler<event extends keyof DOMEventMap> = (
 ) => void;
 
 type Options = {
-  enabled: boolean;
+  /**
+   * Controls whether the minimap should be hidden on mouseout.
+   * Defaults to `false`.
+   */
+  autohide?: boolean;
 
+  enabled: boolean;
   /**
    * Determines how to render text. Defaults to `characters`.
    */
-  displayText?: "blocks" | "characters";
+  displayText?: 'blocks' | 'characters';
 
   /**
    * Attach event handlers to the minimap container element.
@@ -27,7 +32,7 @@ type Options = {
    * The overlay shows the portion of the file currently in the viewport.
    * Defaults to `always`.
    */
-  showOverlay?: "always" | "mouse-over";
+  showOverlay?: 'always' | 'mouse-over';
 
   /**
    * Enables a gutter to be drawn on the given line to the left
@@ -58,10 +63,11 @@ const Config = Facet.define<MinimapConfig | null, Required<Options>>({
 
     return combineConfig(configs, {
       enabled: configs.length > 0,
-      displayText: "characters",
+      displayText: 'characters',
       eventHandlers: {},
-      showOverlay: "always",
+      showOverlay: 'always',
       gutters: [],
+      autohide: false,
     });
   },
 });
